@@ -6,7 +6,7 @@ Proyek UTS Pemrograman Web (PHP Native, tanpa framework).
 ## Kelompok G30 SPPG
 | No | Nama | NIM |
 |----|------|-----|
-| 1 | Kheed Adhi | 672025092 |
+| 1 | Kheef Adhi | 672025092 |
 | 2 | Gunawan Wibi | 672025100 |
 | 3 | Afrizal Hilbran | 672025105 |
 | 4 | Yuzrizal Firman | 672025149 |
