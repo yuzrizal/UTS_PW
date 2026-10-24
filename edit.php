@@ -1,81 +1,32 @@
 <?php
-include 'koneksi.php';
+$id = $_GET['id'];
+$data = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT * FROM barang WHERE id = '$id'"));
 
-$id = $_GET['id'] ?? null;
-if (!$id) {
-    header("Location: index.php");
-    exit;
-}
+if (isset($_POST['update'])) {
+    $kode     = $_POST['kode_barang'];
+    $nama     = $_POST['nama_barang'];
+    $kategori = $_POST['kategori'];
+    $satuan   = $_POST['satuan'];
 
-// Ambil data lama
-$stmt = $pdo->prepare("SELECT * FROM barang WHERE id = ?");
-$stmt->execute([$id]);
-$barang = $stmt->fetch(PDO::FETCH_ASSOC);
-
-if (!$barang) {
-    header("Location: index.php");
-    exit;
-}
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $nama_barang   = $_POST['nama_barang'];
-    $kategori      = $_POST['kategori'];
-    $jumlah        = $_POST['jumlah'];
-    $harga         = $_POST['harga'];
-    $tanggal_masuk = $_POST['tanggal_masuk'];
-
-    $stmt = $pdo->prepare("UPDATE barang SET nama_barang = ?, kategori = ?, jumlah = ?, harga = ?, tanggal_masuk = ? WHERE id = ?");
-    $stmt->execute([$nama_barang, $kategori, $jumlah, $harga, $tanggal_masuk, $id]);
-
-    header("Location: index.php");
-    exit;
+    $query = mysqli_query($koneksi, "UPDATE barang SET kode_barang='$kode', nama_barang='$nama', kategori='$kategori', satuan='$satuan' WHERE id='$id'");
+    
+    if ($query) {
+        echo "<script>alert('Data barang berhasil diperbarui!');window.location='index.php?page=barang';</script>";
+    } else {
+        echo "<script>alert('Gagal memperbarui data!');</script>";
+    }
 }
 ?>
-
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Edit Barang</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        form { width: 300px; }
-        div { margin-bottom: 10px; }
-        label { display: block; margin-bottom: 3px; }
-        input[type="text"], input[type="number"], input[type="date"] { width: 100%; padding: 5px; }
-        button { padding: 8px 15px; background: #ffc107; color: black; border: none; cursor: pointer; }
-        a { display: inline-block; margin-top: 10px; color: #555; }
-    </style>
-</head>
-<body>
-
-    <h2>Edit Barang Inventaris</h2>
-
-    <form method="POST">
-        <div>
-            <label>Nama Barang:</label>
-            <input type="text" name="nama_barang" value="<?= htmlspecialchars($barang['nama_barang']); ?>" required>
-        </div>
-        <div>
-            <label>Kategori:</label>
-            <input type="text" name="kategori" value="<?= htmlspecialchars($barang['kategori']); ?>" required>
-        </div>
-        <div>
-            <label>Jumlah:</label>
-            <input type="number" name="jumlah" value="<?= $barang['jumlah']; ?>" required>
-        </div>
-        <div>
-            <label>Harga (Rp):</label>
-            <input type="number" step="any" name="harga" value="<?= $barang['harga']; ?>" required>
-        </div>
-        <div>
-            <label>Tanggal Masuk:</label>
-            <input type="date" name="tanggal_masuk" value="<?= $barang['tanggal_masuk']; ?>" required>
-        </div>
-        <button type="submit">Update</button>
-    </form>
-
-    <a href="index.php">&laquo; Kembali</a>
-
-</body>
-</html>
+<h2>Edit Barang</h2>
+<form action="" method="POST">
+    <label>Kode Barang</label>
+    <input type="text" name="kode_barang" value="<?= $data['kode_barang']; ?>" required>
+    <label>Nama Barang</label>
+    <input type="text" name="nama_barang" value="<?= $data['nama_barang']; ?>" required>
+    <label>Kategori</label>
+    <input type="text" name="kategori" value="<?= $data['kategori']; ?>" required>
+    <label>Satuan</label>
+    <input type="text" name="satuan" value="<?= $data['satuan']; ?>" required>
+    <button type="submit" name="update" class="btn btn-success">Update Barang</button>
+    <a href="index.php?page=barang" class="btn btn-primary">Kembali</a>
+</form>
