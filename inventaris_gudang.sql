@@ -1,60 +1,32 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Generation Time: Oct 13, 2026 at 06:43 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+CREATE DATABASE inventaris_gudang;
+USE inventaris_gudang;
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
+-- Tabel Data Barang
+CREATE TABLE barang (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    kode_barang VARCHAR(50) NOT NULL UNIQUE,
+    nama_barang VARCHAR(100) NOT NULL,
+    kategori VARCHAR(50) NOT NULL,
+    stok INT NOT NULL DEFAULT 0,
+    satuan VARCHAR(20) NOT NULL
+);
 
+-- Tabel Barang Masuk
+CREATE TABLE barang_masuk (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_barang INT NOT NULL,
+    jumlah INT NOT NULL,
+    tanggal DATE NOT NULL,
+    keterangan TEXT,
+    FOREIGN KEY (id_barang) REFERENCES barang(id) ON DELETE CASCADE
+);
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Database: `inventaris_gudang`
---
-
--- --------------------------------------------------------
-
---
--- Table structure for table `barang`
---
-
-CREATE TABLE `barang` (
-  `id` int(11) NOT NULL,
-  `nama_barang` varchar(100) NOT NULL,
-  `jumlah` int(11) NOT NULL,
-  `harga` decimal(12,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `barang`
---
-ALTER TABLE `barang`
-  ADD PRIMARY KEY (`id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `barang`
---
-ALTER TABLE `barang`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+-- Tabel Barang Keluar
+CREATE TABLE barang_keluar (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_barang INT NOT NULL,
+    jumlah INT NOT NULL,
+    tanggal DATE NOT NULL,
+    penerima VARCHAR(100) NOT NULL,
+    FOREIGN KEY (id_barang) REFERENCES barang(id) ON DELETE CASCADE
+);
