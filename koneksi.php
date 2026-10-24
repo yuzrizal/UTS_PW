@@ -2,12 +2,11 @@
 $host = "localhost";
 $user = "root";
 $pass = "";
-$db   = "db_inventaris";
+$db   = "inventaris_gudang";
 
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$db", $user, $pass);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Koneksi database gagal: " . $e->getMessage());
+$koneksi = mysqli_connect($host, $user, $pass, $db);
+
+if (!$koneksi) {
+    die("Koneksi database gagal: " . mysqli_connect_error());
 }
 ?>
