@@ -1,76 +1,82 @@
 <?php
 include 'koneksi.php';
 
-// Proses hapus data jika ada parameter ?hapus=id
-if (isset($_GET['hapus'])) {
-    $id = $_GET['hapus'];
-    $stmt = $pdo->prepare("DELETE FROM barang WHERE id = ?");
-    $stmt->execute([$id]);
-    header("Location: index.php");
-    exit;
-}
+// Hitung statistik untuk Dashboard
+$total_barang = mysqli_num_rows(mysqli_query($koneksi, "SELECT * FROM barang"));
+$total_masuk  = mysqli_num_rows(mysqli_query($koneksi, "SELECT * FROM barang_masuk"));
+$total_keluar = mysqli_num_rows(mysqli_query($koneksi, "SELECT * FROM barang_keluar"));
 
-// Ambil semua data barang
-$stmt = $pdo->query("SELECT * FROM barang ORDER BY id DESC");
-$barangs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
 ?>
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Inventaris Gudang Sederhana</title>
+    <title>Aplikasi Inventaris Gudang</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        a { text-decoration: none; padding: 5px 10px; background: #007BFF; color: white; border-radius: 3px; }
-        a.hapus { background: #dc3545; }
-        .tambah { margin-bottom: 15px; display: inline-block; }
+        body { font-family: Arial, sans-serif; margin: 0; background-color: #f4f6f9; display: flex; }
+        .sidebar { width: 250px; background: #343a40; color: #fff; height: 100vh; position: fixed; padding-top: 20px; }
+        .sidebar h2 { text-align: center; font-size: 20px; margin-bottom: 30px; }
+        .sidebar a { display: block; color: #c2c7d0; padding: 12px 20px; text-decoration: none; transition: 0.3s; }
+        .sidebar a:hover, .sidebar a.active { background: #007bff; color: #fff; }
+        .content { margin-left: 250px; padding: 30px; width: calc(100% - 250px); box-sizing: border-box; }
+        .card-box { display: flex; gap: 20px; margin-bottom: 30px; }
+        .card { background: #fff; padding: 20px; border-radius: 5px; flex: 1; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .card h3 { margin: 0 0 10px 0; color: #6c757d; font-size: 16px; }
+        .card p { font-size: 24px; font-weight: bold; margin: 0; color: #343a40; }
+        table { width: 100%; border-collapse: collapse; background: #fff; margin-top: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        th, td { padding: 12px; border: 1px solid #dee2e6; text-align: left; }
+        th { background-color: #f8f9fa; }
+        .btn { padding: 6px 12px; text-decoration: none; border-radius: 4px; color: #fff; font-size: 14px; }
+        .btn-primary { background: #007bff; }
+        .btn-success { background: #28a745; }
+        .btn-warning { background: #ffc107; color: #212529; }
+        .btn-danger  { background: #dc3545; }
+        form input, form select, form textarea { width: 100%; padding: 8px; margin: 6px 0 15px 0; display: inline-block; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
     </style>
 </head>
 <body>
 
-    <h2>Daftar Inventaris Gudang</h2>
+    <div class="sidebar">
+        <h2>GUDANGKU</h2>
+        <a href="index.php?page=dashboard" class="<?= $page == 'dashboard' ? 'active' : '' ?>">Dashboard</a>
+        <a href="index.php?page=barang" class="<?= $page == 'barang' ? 'active' : '' ?>">Data Barang</a>
+        <a href="index.php?page=barang_masuk" class="<?= $page == 'barang_masuk' ? 'active' : '' ?>">Barang Masuk</a>
+        <a href="index.php?page=barang_keluar" class="<?= $page == 'barang_keluar' ? 'active' : '' ?>">Barang Keluar</a>
+        <a href="index.php?page=laporan" class="<?= $page == 'laporan' ? 'active' : '' ?>">Laporan</a>
+    </div>
 
-    <a href="tambah.php" class="tambah">+ Tambah Barang Baru</a>
-
-    <table>
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Nama Barang</th>
-                <th>Kategori</th>
-                <th>Jumlah</th>
-                <th>Harga</th>
-                <th>Tanggal Masuk</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php if (count($barangs) > 0): ?>
-                <?php $no = 1; foreach ($barangs as $row): ?>
-                <tr>
-                    <td><?= $no++; ?></td>
-                    <td><?= htmlspecialchars($row['nama_barang']); ?></td>
-                    <td><?= htmlspecialchars($row['kategori']); ?></td>
-                    <td><?= $row['jumlah']; ?></td>
-                    <td>Rp <?= number_format($row['harga'], 0, ',', '.'); ?></td>
-                    <td><?= $row['tanggal_masuk']; ?></td>
-                    <td>
-                        <a href="edit.php?id=<?= $row['id']; ?>">Edit</a>
-                        <a href="index.php?hapus=<?= $row['id']; ?>" class="hapus" onclick="return confirm('Yakin ingin menghapus data ini?')">Hapus</a>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <tr>
-                    <td colspan="7" style="text-align: center;">Belum ada data barang.</td>
-                </tr>
-            <?php endif; ?>
-        </tbody>
-    </table>
+    <div class="content">
+        <?php
+        if ($page == 'dashboard') {
+            ?>
+            <h2>Dashboard</h2>
+            <div class="card-box">
+                <div class="card">
+                    <h3>Total Jenis Barang</h3>
+                    <p><?= $total_barang; ?></p>
+                </div>
+                <div class="card">
+                    <h3>Transaksi Barang Masuk</h3>
+                    <p><?= $total_masuk; ?></p>
+                </div>
+                <div class="card">
+                    <h3>Transaksi Barang Keluar</h3>
+                    <p><?= $total_keluar; ?></p>
+                </div>
+            </div>
+            <p>Selamat datang di Aplikasi Pengelolaan Inventaris Gudang. Gunakan menu di samping untuk mengelola data.</p>
+            <?php
+        } elseif ($page == 'barang') { include 'barang.php'; }
+        elseif ($page == 'tambah_barang') { include 'tambah_barang.php'; }
+        elseif ($page == 'edit_barang') { include 'edit_barang.php'; }
+        elseif ($page == 'hapus_barang') { include 'hapus_barang.php'; }
+        elseif ($page == 'barang_masuk') { include 'barang_masuk.php'; }
+        elseif ($page == 'barang_keluar') { include 'barang_keluar.php'; }
+        elseif ($page == 'laporan') { include 'laporan.php'; }
+        else { echo "<h3>Halaman tidak ditemukan!</h3>"; }
+        ?>
+    </div>
 
 </body>
 </html>
