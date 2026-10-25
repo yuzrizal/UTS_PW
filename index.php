@@ -25,9 +25,8 @@ include 'koneksi.php';
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link active" href="#">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Barang Masuk</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Barang Keluar</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Laporan</a></li>
+
+                    <li class="nav-item"><a class="nav-link" href="laporan.php">laporan</a></li>
                 </ul>
             </div>
         </div>
