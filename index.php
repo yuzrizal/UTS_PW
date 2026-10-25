@@ -18,7 +18,7 @@ include 'koneksi.php';
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm mb-4">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="#"><i class="fa-solid => fa-boxes-stacked me-2"></i>Inventaris Gudang</a>
+            <a class="navbar-brand fw-bold" href="#"><i class="fa-solid fa-boxes-stacked me-2"></i>Inventaris Gudang</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -73,11 +73,11 @@ include 'koneksi.php';
                             <i class="fa-solid fa-triangle-exclamation fa-2x"></i>
                         </div>
                         <div>
-                            <h6 class="text-muted mb-1">Stok Menipis (< 5)</h6>
+                            <h6 class="text-muted mb-1">Stok Menipis</h6>
                             <?php 
                                 $stok_low = 0;
                                 if($conn) {
-                                    $q = mysqli_query($conn, "SELECT COUNT(*) as total FROM barang WHERE stok < 5");
+                                    $q = mysqli_query($conn, "SELECT COUNT(*) as total FROM barang WHERE stok < stok_minimum");
                                     if($q) { $res = mysqli_fetch_assoc($q); $stok_low = $res['total']; }
                                 }
                             ?>
@@ -98,7 +98,7 @@ include 'koneksi.php';
                             <?php 
                                 $total_kategori = 0;
                                 if($conn) {
-                                    $q = mysqli_query($conn, "SELECT COUNT(DISTINCT kategori) as total FROM barang");
+                                    $q = mysqli_query($conn, "SELECT COUNT(DISTINCT id_kategori) as total FROM barang");
                                     if($q) { $res = mysqli_fetch_assoc($q); $total_kategori = $res['total']; }
                                 }
                             ?>
@@ -135,7 +135,10 @@ include 'koneksi.php';
                             <?php
                             if ($conn) {
                                 // Mengambil data dari tabel barang
-                                $query = "SELECT * FROM barang ORDER BY id DESC";
+                                $query = "SELECT b.*, k.nama_kategori
+                                          FROM barang b
+                                          LEFT JOIN kategori k ON b.id_kategori = k.id_kategori
+                                          ORDER BY b.nama_barang DESC";
                                 $result = mysqli_query($conn, $query);
 
                                 if ($result && mysqli_num_rows($result) > 0) {
@@ -146,9 +149,9 @@ include 'koneksi.php';
                                             <td><?= $no++; ?></td>
                                             <td><span class="badge bg-secondary"><?= htmlspecialchars($row['kode_barang'] ?? '-'); ?></span></td>
                                             <td><strong><?= htmlspecialchars($row['nama_barang'] ?? ''); ?></strong></td>
-                                            <td><?= htmlspecialchars($row['kategori'] ?? '-'); ?></td>
+                                            <td><?= htmlspecialchars($row['nama_kategori'] ?? '-'); ?></td>
                                             <td>
-                                                <?php if(($row['stok'] ?? 0) < 5): ?>
+                                                <?php if(($row['stok'] <= $row['stok_minimum'])): ?>
                                                     <span class="badge bg-danger"><?= $row['stok']; ?> (Stok Rendah)</span>
                                                 <?php else: ?>
                                                     <span class="badge bg-success"><?= $row['stok']; ?></span>
@@ -156,10 +159,10 @@ include 'koneksi.php';
                                             </td>
                                             <td>Rp <?= number_format($row['harga'] ?? 0, 0, ',', '.'); ?></td>
                                             <td class="text-center">
-                                                <a href="edit.php?id=<?= $row['id']; ?>" class="btn btn-sm btn-outline-warning me-1">
+                                                <a href="edit.php?id=<?= $row['id_barang']; ?>" class="btn btn-sm btn-outline-warning me-1">
                                                     <i class="fa-solid fa-pen-to-square"></i>
                                                 </a>
-                                                <a href="hapus.php?id=<?= $row['id']; ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus barang ini?')">
+                                                <a href="delete.php?id=<?= $row['id_barang']; ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus barang ini?')">
                                                     <i class="fa-solid fa-trash"></i>
                                                 </a>
                                             </td>
@@ -181,6 +184,6 @@ include 'koneksi.php';
     </div>
 
     <!-- Bootstrap 5 JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

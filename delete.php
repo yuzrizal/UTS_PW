@@ -13,15 +13,19 @@ if (isset($_GET['id'])) {
 
         mysqli_stmt_bind_param($stmt, "i", $id);
 
-        if (mysqli_stmt_execute($stmt)) {
-            if (mysqli_stmt_affected_rows($stmt) > 0) {
-                header("Location: index.php?pesan=hapus_berhasil");
-                exit;
+        try {
+            if (mysqli_stmt_execute($stmt)) {
+                if (mysqli_stmt_affected_rows($stmt) > 0) {
+                    header("Location: index.php?pesan=hapus_berhasil");
+                    exit;
+                } else {
+                    echo "Barang tidak ditemukan.";
+                }
             } else {
-                echo "Barang tidak ditemukan.";
+                echo "Gagal menghapus barang. Barang mungkin masih digunakan di tabel lain.";
             }
-        } else {
-            echo "Gagal menghapus barang. Barang mungkin masih digunakan di tabel lain.";
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
         }
 
         mysqli_stmt_close($stmt);
