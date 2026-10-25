@@ -1,14 +1,17 @@
 <?php
 // Impor file koneksi atau jalankan skrip koneksi
-$host = 'localhost';$user = 'root';
-$pass = '';$db   = 'InventarisGudang_db';
+$host = 'localhost';
+$user = 'root';
+$pass = '';
+$db   = 'InventarisGudang_db';
 
-$conn = mysqli_connect($host,$user, $pass,$db);
+$conn = mysqli_connect($host, $user, $pass, $db);
 
 $status_koneksi = "";
 $status_class   = "";
 
-if ($conn) {$status_koneksi = "Berhasil terhubung ke database '$db'!";
+if ($conn) {
+    $status_koneksi = "Berhasil terhubung ke database '$db'!";
     $status_class   = "success";
 } else {
     $status_koneksi = "Koneksi gagal: " . mysqli_connect_error();
@@ -71,7 +74,7 @@ if ($conn) {$status_koneksi = "Berhasil terhubung ke database '$db'!";
                                 $total_items = 0;
                                 if($conn) {
                                     $q = mysqli_query($conn, "SELECT COUNT(*) as total FROM barang");
-                                    if($q) { $res = mysqli_fetch_assoc($q); $total_items =$res['total']; }
+                                    if($q) { $res = mysqli_fetch_assoc($q); $total_items = $res['total']; }
                                 }
                             ?>
                             <h3 class="fw-bold mb-0"><?= $total_items; ?></h3>
@@ -92,7 +95,7 @@ if ($conn) {$status_koneksi = "Berhasil terhubung ke database '$db'!";
                                 $stok_low = 0;
                                 if($conn) {
                                     $q = mysqli_query($conn, "SELECT COUNT(*) as total FROM barang WHERE stok < 5");
-                                    if($q) { $res = mysqli_fetch_assoc($q); $stok_low =$res['total']; }
+                                    if($q) { $res = mysqli_fetch_assoc($q); $stok_low = $res['total']; }
                                 }
                             ?>
                             <h3 class="fw-bold mb-0"><?= $stok_low; ?></h3>
@@ -113,7 +116,7 @@ if ($conn) {$status_koneksi = "Berhasil terhubung ke database '$db'!";
                                 $total_kategori = 0;
                                 if($conn) {
                                     $q = mysqli_query($conn, "SELECT COUNT(DISTINCT kategori) as total FROM barang");
-                                    if($q) { $res = mysqli_fetch_assoc($q); $total_kategori =$res['total']; }
+                                    if($q) { $res = mysqli_fetch_assoc($q); $total_kategori = $res['total']; }
                                 }
                             ?>
                             <h3 class="fw-bold mb-0"><?= $total_kategori; ?></h3>
@@ -150,9 +153,10 @@ if ($conn) {$status_koneksi = "Berhasil terhubung ke database '$db'!";
                             if ($conn) {
                                 // Mengambil data dari tabel barang
                                 $query = "SELECT * FROM barang ORDER BY id DESC";
-                                $result = mysqli_query($conn,$query);
+                                $result = mysqli_query($conn, $query);
 
-                                if ($result && mysqli_num_rows($result) > 0) {$no = 1;
+                                if ($result && mysqli_num_rows($result) > 0) {
+                                    $no = 1;
                                     while ($row = mysqli_fetch_assoc($result)) {
                                         ?>
                                         <tr>
@@ -164,4 +168,36 @@ if ($conn) {$status_koneksi = "Berhasil terhubung ke database '$db'!";
                                                 <?php if(($row['stok'] ?? 0) < 5): ?>
                                                     <span class="badge bg-danger"><?= $row['stok']; ?> (Stok Rendah)</span>
                                                 <?php else: ?>
-                                                    <span
+                                                    <span class="badge bg-success"><?= $row['stok']; ?></span>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td>Rp <?= number_format($row['harga'] ?? 0, 0, ',', '.'); ?></td>
+                                            <td class="text-center">
+                                                <a href="edit.php?id=<?= $row['id']; ?>" class="btn btn-sm btn-outline-warning me-1">
+                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                </a>
+                                                <a href="hapus.php?id=<?= $row['id']; ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus barang ini?')">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <?php
+                                    }
+                                } else {
+                                    echo '<tr><td colspan="7" class="text-center text-muted py-4">Belum ada data barang di database.</td></tr>';
+                                }
+                            } else {
+                                echo '<tr><td colspan="7" class="text-center text-danger py-4">Database belum terhubung. Silakan periksa konfigurasi.</td></tr>';
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"></script>
+</body>
+</html>
