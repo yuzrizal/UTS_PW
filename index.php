@@ -1,6 +1,3 @@
-<?php
-// Konfigurasi koneksi database
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
