@@ -113,7 +113,7 @@ include 'koneksi.php';
         <div class="card border-0 shadow-sm">
             <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                 <h5 class="mb-0 fw-bold"><i class="fa-solid fa-list me-2"></i>Daftar Stok Inventaris</h5>
-                <a href="tambah_barang.php" class="btn btn-primary btn-sm">
+                <a href="tambah.php" class="btn btn-primary btn-sm">
                     <i class="fa-solid fa-plus me-1"></i> Tambah Barang
                 </a>
             </div>
