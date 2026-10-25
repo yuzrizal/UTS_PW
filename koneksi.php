@@ -2,7 +2,7 @@
 $host = 'localhost';
 $user = 'root';
 $pass = '';
-$db = 'InventarisGudang_db';
+$db = 'inventaris_gudang';
 
 $conn = mysqli_connect($host, $user, $pass, $db);
 
