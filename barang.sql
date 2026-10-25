@@ -7,6 +7,10 @@
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
+DROP DATABASE IF EXISTS inventaris_gudang;
+CREATE DATABASE `inventaris_gudang` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `inventaris_gudang`;
+
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
@@ -22,13 +26,36 @@ SET time_zone = "+00:00";
 --
 
 -- --------------------------------------------------------
+-- --------------------------------------------------------
+-- Tabel kategori
+-- --------------------------------------------------------
+CREATE TABLE `kategori` (
+  `id_kategori` int(11) NOT NULL AUTO_INCREMENT,
+  `nama_kategori` varchar(100) NOT NULL,
+  PRIMARY KEY (`id_kategori`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+ 
+INSERT INTO `kategori` (`id_kategori`, `nama_kategori`) VALUES
+(1, 'Elektronik'),
+(2, 'Alat Tulis'),
+(3, 'Kebersihan');
+ 
+-- --------------------------------------------------------
+-- Tabel supplier
+-- --------------------------------------------------------
+CREATE TABLE `supplier` (
+  `id_supplier` int(11) NOT NULL AUTO_INCREMENT,
+  `nama_supplier` varchar(100) NOT NULL,
+  PRIMARY KEY (`id_supplier`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+ 
+INSERT INTO `supplier` (`id_supplier`, `nama_supplier`) VALUES
+(1, 'Supplier A'),
+(2, 'Supplier B');
 
---
 -- Table structure for table `barang`
 --
 
-DROP DATABASE IF EXISTS inventaris_gudang;
-CREATE DATABASE inventaris_gudang;
 
 CREATE TABLE `barang` (
   `id_barang` int(11) NOT NULL,
