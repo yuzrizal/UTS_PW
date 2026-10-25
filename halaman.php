@@ -12,7 +12,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Aplikasi Inventaris Gudang</title>
+    <title>Aplikasi Inventaris Gudang Barang Terlarang</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 0; background-color: #f4f6f9; display: flex; }
         .sidebar { width: 250px; background: #343a40; color: #fff; height: 100vh; position: fixed; padding-top: 20px; }
