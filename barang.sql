@@ -27,6 +27,9 @@ SET time_zone = "+00:00";
 -- Table structure for table `barang`
 --
 
+DROP DATABASE IF EXISTS inventaris_gudang;
+CREATE DATABASE inventaris_gudang;
+
 CREATE TABLE `barang` (
   `id_barang` int(11) NOT NULL,
   `kode_barang` varchar(20) NOT NULL,
